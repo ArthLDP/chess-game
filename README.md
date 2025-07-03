@@ -14,7 +14,7 @@ All piece assets are from Lichess cburnett set: https://github.com/lichess-org/l
 
 ## Controls
 
-- Mouse Click: First click selects a piece; second click moves it to the chosen square.
+- Mouse Click: The first click with any mouse button selects a piece; the second click moves it to the chosen square.
 - ← Left Arrow: Undo the last move.
 - ↑ / ↓ Up/Down Arrows: Navigate through the move log.
 - F: Flip the board's point of view.
