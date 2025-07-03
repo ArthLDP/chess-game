@@ -31,5 +31,4 @@ All piece assets are from Lichess cburnett set: https://github.com/lichess-org/l
 - Python-chess (https://python-chess.readthedocs.io/) Used version: 1.11.2
 
 Install dependencies:
-pip install pygame
-pip install chess
+pip install pygame chess
