@@ -6,7 +6,7 @@ All piece assets are from Lichess cburnett set: https://github.com/lichess-org/l
 
 ## Features
 
-✅ Full chess rules (check, checkmate, draw)  
+✅ Full chess rules 
 ✅ Move history log  
 ✅ Flip board perspective  
 ✅ Undo moves  
@@ -14,12 +14,11 @@ All piece assets are from Lichess cburnett set: https://github.com/lichess-org/l
 
 ## Controls
 
-| Key | Action
-| Mouse Click        | First click selects a piece; second click moves it to the chosen square |
-| ← Left Arrow       | Undo the last move |
-| ↑ / ↓ Arrows       | Navigate through the move log |
-| F                  | Flip the board's point of view |
-| R                  | Restart with a new game |
+- Mouse Click: First click selects a piece; second click moves it to the chosen square.
+- ← Left Arrow: Undo the last move.
+- ↑ / ↓ Up/Down Arrows: Navigate through the move log.
+- F: Flip the board's point of view.
+- R: Restart with a new game.
 
 ## Notes
 
