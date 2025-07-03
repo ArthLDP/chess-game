@@ -6,10 +6,10 @@ All piece assets are from Lichess cburnett set: https://github.com/lichess-org/l
 
 ## Features
 
-✅ Full chess rules 
-✅ Move history log  
-✅ Flip board perspective  
-✅ Undo moves  
+✅ Full chess rules
+✅ Move history log
+✅ Flip board perspective
+✅ Undo moves
 ✅ Automatic PGN export of finished games
 
 ## Controls
