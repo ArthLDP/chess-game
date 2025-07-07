@@ -94,9 +94,10 @@ def make_move(board, player_clicks, screen, flipped=False):
     if piece and piece.piece_type == chess.PAWN:
         to_rank = chess.square_rank(to_square)
         if (piece.color == chess.WHITE and to_rank == 7) or (piece.color == chess.BLACK and to_rank == 0):
-            choice = prompt_promotion(screen)
-            promo_move = chess.Move(from_square, to_square, promotion=chess.Piece.from_symbol(choice).piece_type)
-            if promo_move in board.legal_moves:
+            promotion_test = chess.Move(from_square, to_square, promotion=chess.QUEEN) # Temp promotion to check if it's possible before triggering menu
+            if promotion_test in board.legal_moves:
+                choice = prompt_promotion(screen)
+                promo_move = chess.Move(from_square, to_square, promotion=chess.Piece.from_symbol(choice).piece_type)
                 board.push(promo_move)
                 return True
 
