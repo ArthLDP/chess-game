@@ -225,8 +225,8 @@ def main():
                 mouse_pos = pygame.mouse.get_pos()
                 clicked_col = mouse_pos[0] // SQ_SIZE
                 clicked_row = mouse_pos[1] // SQ_SIZE
-                if clicked_col >= DIMENSION:
-                    continue  # Ignore clicks on move log area
+                if clicked_col >= DIMENSION or clicked_row >= DIMENSION:
+                    continue  # Ignore clicks outside the chessboard (0-7 range)
                 clicked_square = (clicked_row, clicked_col)
                 
                 if flipped:
