@@ -11,6 +11,9 @@ SQ_SIZE = HEIGHT // DIMENSION  # Size of each square
 FPS = 30  # Frames per second
 IMAGES = {}  # Dictionary to hold loaded piece images
 PROMOTION_OPTIONS = ['q', 'r', 'b', 'n']  # Promotion choices
+PIECE_SCORE = { 'k': 0, 'q': 9, 'r': 5, 'b': 3, 'n': 3, 'p': 1 }
+CHECKMATE_SCORE = 10000
+STALEMATE_SCORE = 0
 
 def load_images():
     # Load and scale piece images from the assets folder
@@ -200,6 +203,79 @@ def export_game_to_pgn(board):
     with open(f"games/game{i}.pgn", "w") as f:
         print(game, file=f)
 
+def ai_make_move(board, depth=3):
+    print("AI is thinking...")
+    ai_color = board.turn  # Save AI's color before move
+    best_score = float('-inf')
+    best_move = None
+    alpha = float('-inf')
+    beta = float('inf')
+
+    for move in board.legal_moves:
+        board.push(move)
+        score = minimax(board, depth - 1, alpha, beta, False, ai_color)
+        board.pop()
+
+        if score > best_score:
+            best_score = score
+            best_move = move
+
+    if best_move:
+        board.push(best_move)
+        print("AI moved: ", best_move)
+        print("Move score: ", best_score)
+        return True
+    else:
+        print("AI has no legal moves.")
+        return False
+
+def minimax(board, depth, alpha, beta, maximizing_player, ai_color):
+    if board.is_game_over() or depth == 0:
+        return evaluate_position(board, ai_color)
+
+    if maximizing_player:
+        max_eval = float('-inf')
+        for move in board.legal_moves:
+            board.push(move)
+            eval = minimax(board, depth - 1, alpha, beta, False, ai_color)
+            board.pop()
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta <= alpha:
+                break
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for move in board.legal_moves:
+            board.push(move)
+            eval = minimax(board, depth - 1, alpha, beta, True, ai_color)
+            board.pop()
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta <= alpha:
+                break
+        return min_eval
+
+def evaluate_position(board, ai_color):
+    if board.is_checkmate():
+        if board.turn == ai_color:
+            return -CHECKMATE_SCORE # Bad: AI got checkmated
+        else:
+            return CHECKMATE_SCORE # Good: AI delivered checkmate
+    if board.is_stalemate():
+        return STALEMATE_SCORE
+
+    score = 0
+    for square in chess.SQUARES:
+        piece = board.piece_at(square)
+        if piece:
+            value = PIECE_SCORE[piece.symbol().lower()]
+            if piece.color == ai_color:
+                score += value
+            else:
+                score -= value
+    return score
+
 def main():
     # Main game loop
     pygame.init()
@@ -269,7 +345,8 @@ def main():
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    undo_move(board)
+                    undo_move(board) # Undo ai move
+                    undo_move(board) # Undo player move
                     game_over = False
                     game_result_text = ""
                     sq_selected = ()
@@ -288,6 +365,20 @@ def main():
                     flipped = not flipped
                     sq_selected = ()
                     player_clicks = []
+         # AI's turn (if game is not over and it's the choosen turn)
+        if not game_over:
+            if board.turn == chess.BLACK: # Assuming AI plays the color you choose
+                ai_make_move(board)
+                # After AI moves, check for game over conditions again
+                if board.is_checkmate():
+                    game_over = True
+                    winner = "White" if not board.turn else "Black"
+                    game_result_text = f"{winner} wins, Checkmate!"
+                    export_game_to_pgn(board)
+                elif board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves() or board.is_fivefold_repetition() or board.is_variant_draw():
+                    game_over = True
+                    game_result_text = "Draw!"
+                    export_game_to_pgn(board)
 
         draw_board(screen)
         highlight_square(screen, sq_selected)
